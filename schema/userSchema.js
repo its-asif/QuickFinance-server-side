@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         enum: ['personal', 'family', 'business']
     },
-    
 })
+
 
 module.exports = mongoose.model('User', userSchema);
