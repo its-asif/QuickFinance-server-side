@@ -19,6 +19,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/users', require('./routeHandler/userHandler'));
+app.use('/api/transactions', require('./routeHandler/transactionHandler'))
 
 
 app.listen(3000, () => {
