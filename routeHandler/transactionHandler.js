@@ -20,6 +20,7 @@ router.get('/', async (req, res) => {
         })
         res.json(transactions)
     } catch(err) {
+        console.log(err);
         res.send('Error ' + err)
     }
 })
@@ -30,7 +31,7 @@ router.post('/', async (req, res) => {
     console.log(req.body);
     
     try {
-        const transaction = new Transaction(req.body);
+        const transaction = new Transaction(req.body)
         const newTransaction = await transaction.save()
         res.json(newTransaction)
     } catch(err) {
