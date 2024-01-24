@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema({
         required: true,
         enum: ['personal', 'family', 'business']
     },
-    
 })
 
 
