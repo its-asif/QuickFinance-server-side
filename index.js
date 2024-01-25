@@ -20,6 +20,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', require('./routeHandler/userHandler'));
 app.use('/api/transactions', require('./routeHandler/transactionHandler'))
+app.use('/api/dashboard', require('./routeHandler/dashboardHandler'))
 
 
 app.listen(3000, () => {
