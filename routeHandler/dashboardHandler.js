@@ -57,15 +57,136 @@ router.get('/:email', async (req,res) => {
         })
 
 
+        // total transaction by trxCateogry of income
+        let incomeByCategory = await Transaction.aggregate([
+            {
+                $match: {
+                    userEmail: email,
+                    trxType: 'income'
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        trxCategory: '$trxCategory'
+                    },
+                    totalAmount: { $sum: "$amount" },
+                    count: { $sum: 1 },
+                }
+            }
+        ])
+
+        // total transaction by trxCateogry of expense
+        let expenseByCategory = await Transaction.aggregate([
+            {
+                $match: {
+                    userEmail: email,
+                    trxType: 'expense'
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        trxCategory: '$trxCategory'
+                    },
+                    totalAmount: { $sum: "$amount" },
+                    count: { $sum: 1 },
+                }
+            }
+        ])
+        
+
+        // total income by trxCateogry of current month
+        let incomeByCategoryOfCurrentMonth = await Transaction.aggregate([
+            {
+                $match: {
+                    userEmail: email,
+                    trxType: 'income',
+                    createdAt: {
+                        $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+                        $lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        trxCategory: '$trxCategory'
+                    },
+                    totalAmount: { $sum: "$amount" },
+                    count: { $sum: 1 },
+                }
+            }
+        ])
+
+
+        // total expense by trxCateogry of current month
+        let expenseByCategoryOfCurrentMonth = await Transaction.aggregate([
+            {
+                $match: {
+                    userEmail: email,
+                    trxType: 'expense',
+                    createdAt: {
+                        $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+                        $lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        trxCategory: '$trxCategory'
+                    },
+                    totalAmount: { $sum: "$amount" },
+                    count: { $sum: 1 },
+                }
+            }
+        ])
+
+
+        // most expense category of current month
+        let maxExpense = 0;
+        let mostExpenseCategory = '';
+        expenseByCategoryOfCurrentMonth.forEach(trx => {
+            if(trx.totalAmount > maxExpense){
+                maxExpense = trx.totalAmount
+                mostExpenseCategory = trx._id.trxCategory
+            }
+        })
+
+        // most income category of current month
+        let maxIncome = 0;
+        let mostIncomeCategory = '';
+        incomeByCategoryOfCurrentMonth.forEach(trx => {
+            if(trx.totalAmount > maxIncome){
+                maxIncome = trx.totalAmount
+                mostIncomeCategory = trx._id.trxCategory
+            }
+        })
+        
+
 
         res.send({
             // transactions: transactions,
+            email,
             totalExpense,
             totalIncome,
             balance: totalIncome - totalExpense,
             TrxByDate , 
             incomeByDate,
             expenseByDate,
+            incomeByCategory,
+            expenseByCategory,
+            incomeByCategoryOfCurrentMonth,
+            expenseByCategoryOfCurrentMonth,
+            maxTrxOfCurrentMonth: 
+            {
+                mostExpenseCategory,
+                maxExpense,
+                mostIncomeCategory,
+                maxIncome
+            },
+
         })
     } catch(err){
         res.send('Error ' + err)
