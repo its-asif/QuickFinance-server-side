@@ -25,6 +25,28 @@ router.get('/', async (req, res) => {
     }
 })
 
+// get transactions by email
+router.get('/:email', async (req,res) => {
+    const email = req.params.email;
+    try{
+        const transactions = await Transaction.find({
+            userEmail: email
+        })
+        .select({
+            _id: 1,
+            userEmail: 1,
+            trxType: 1,
+            trxCategory: 1,
+            amount: 1,
+            trxDetails: 1,
+            createdAt: 1
+        })
+        res.json(transactions) 
+    } catch(err){
+        res.send('Error ' + err)
+    }
+})
+
 
 // post a transaction
 router.post('/', async (req, res) => {
@@ -50,7 +72,7 @@ router.post('/', async (req, res) => {
 
 
 // put transaction by id
-router.put( '/:id', async (req, res) =>{
+router.put('/:id', async (req, res) =>{
     try{
         const transaction = await Transaction.findOneAndUpdate(
             { _id: req.params.id },
