@@ -4,22 +4,22 @@ const router = express.Router();
 
 const Budget = require("../schema/budgetSchema");
 
-// get all users
+// get all budget
 router.get("/", async (req, res) => {
   try {
-    const users = await Budget.find();
-    res.json(users);
+    const budgets = await Budget.find();
+    res.json(budgets);
   } catch (err) {
     res.send("Error " + err);
   }
 });
 
-// post a user
+// post a budget
 router.post("/", async (req, res) => {
-  const budget = new Budget({
-    subBudget: req.body.subBudget,
-    budgetEmail: req.body.budgetEmail,
-  });
+  // console.log(req.body);
+  // console.log(req.body.budgetData);
+  const budget = new Budget(req.body);
+  // console.log(budget);
 
   try {
     const newBudget = await budget.save();
