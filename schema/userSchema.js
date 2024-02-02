@@ -20,11 +20,9 @@ const userSchema = new mongoose.Schema({
     },
     profession : {
         type: String, 
-        required: true
     },
     subcriptionPlan : {
         type: String, 
-        required: true,
         enum: ['personal', 'family', 'business']
     },
 })
