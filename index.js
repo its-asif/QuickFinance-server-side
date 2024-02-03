@@ -1,9 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const cors = require('cors');
 
 // express app initialization
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 
@@ -21,6 +23,7 @@ app.get('/', (req, res) => {
 app.use('/api/users', require('./routeHandler/userHandler'));
 app.use('/api/transactions', require('./routeHandler/transactionHandler'))
 app.use('/api/dashboard', require('./routeHandler/dashboardHandler'))
+app.use('/api/budget', require('./routeHandler/budgetHandler'))
 
 
 app.listen(3000, () => {
