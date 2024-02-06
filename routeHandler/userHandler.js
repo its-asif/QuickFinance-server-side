@@ -15,14 +15,16 @@ router.get('/', async (req, res) => {
 
 // post a user
 router.post('/', async (req, res) => {
-    const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        photoUrl: req.body.photoUrl,
-        profession: req.body.profession,
-        subcriptionPlan: req.body.subcriptionPlan
-    })
+    // const user = new User({
+    //     name: req.body.name,
+    //     email: req.body.email,
+    //     photoUrl: req.body.photoUrl,
+    //     profession: req.body.profession,
+    //     subcriptionPlan: req.body.subcriptionPlan
+    // })
 
+    const user = new User(req.body)
+    console.log(user)
 
     try {
         const newUser =  await user.save() 

@@ -50,6 +50,25 @@ router.post("/", async (req, res) => {
   }
 });
 
+
+router.delete("/:userEmail", async (req, res) => {
+  const userEmail = req.params.userEmail;
+
+  try {
+    const result = await Budget.deleteOne ({ userEmail });
+    
+    if (result.deletedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: `No budgets found for user with email ${userEmail}` });
+    } else {
+      res.json({ message: `Budgets for user with email ${userEmail} deleted` });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+} );
+
 // post a budget
 // router.post("/", async (req, res) => {
 //   // console.log(req.body);
