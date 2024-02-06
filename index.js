@@ -24,7 +24,17 @@ app.use('/api/users', require('./routeHandler/userHandler'));
 app.use('/api/transactions', require('./routeHandler/transactionHandler'))
 app.use('/api/dashboard', require('./routeHandler/dashboardHandler'))
 app.use('/api/budget', require('./routeHandler/budgetHandler'))
+app.use('/api/goals', require('./routeHandler/goalHandler'))
 
+
+// default error handler
+function errorHandler(err, req, res, next) {
+    
+    if( res.headersSent ) {
+        return next(err);
+    }
+    res.status(500).json({ error: err });
+}
 
 app.listen(3000, () => {
     console.log('Server started on port 3000');
