@@ -6,7 +6,7 @@ const cors = require('cors');
 // express app initialization
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); 
 
 
 // database connection with mongoose
