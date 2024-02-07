@@ -110,6 +110,13 @@ const budgetSchema = new mongoose.Schema({
   schoolUniforms: { type: Number },
   otherSchoolNeeds: { type: Number },
   otherChildren: { type: Number },
+
+
+
+  // summary
+  totalIncome: { type: Number },
+  totalExpense: { type: Number },
+  totalSaving: { type: Number },
 });
 
 module.exports = mongoose.model("Budget", budgetSchema);
