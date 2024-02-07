@@ -25,6 +25,7 @@ app.use('/api/transactions', require('./routeHandler/transactionHandler'))
 app.use('/api/dashboard', require('./routeHandler/dashboardHandler'))
 app.use('/api/budget', require('./routeHandler/budgetHandler'))
 app.use('/api/goals', require('./routeHandler/goalHandler'))
+app.use('/api/progress', require('./routeHandler/progressHandler'))
 
 
 // default error handler

@@ -1,50 +1,11 @@
 const express = require('express')
-const mongoose = require('mongoose')
 const router = express.Router()
 const Goal = require('../schema/goalSchema')
 
-
-// const goalSchema = new mongoose.Schema({
-//     goalName : {
-//         type: String, 
-//         required: true
-//     },
-//     userEmail : {
-//         type: String, 
-//         required: true
-//     },
-//     goalAmount : {
-//         type: Number, 
-//         required: true
-//     },
-//     amountSaved : {
-//         type: Number, 
-//         default: 0
-//     },
-//     amountNeeded : {
-//         type: Number, 
-//     },
-//     goalDate : {
-//         type: Date, 
-//     },
-//     remainingDays : {
-//         type: Number, 
-//     },
-//     goalStatus : {
-//         type: String, 
-//         enum: ['pending', 'completed'],
-//         default: 'pending'
-//     }
-
-// }, {timestamps: true} );
-
-
-// get all goals
 router.get('/', async (req, res) => {
     try {
         const goals = await Goal.find()
         res.json(goals)
-        // res.send("goal route")
     } catch(err) {
         res.send('Error ' + err)
     }
@@ -69,10 +30,6 @@ router.get('/:userEmail', async (req, res) => {
 
 // post a goal
 router.post('/', async (req, res) => {
-    // amountNeeded = goalAmount - amountSaved
-    // remainingDays = goalDate - currentDate
-    // goalStatus = pending if amountSaved < goalAmount, else completed
-    // res.body will contain userEmail, goalName, goalAmount, goalDate, amountSaved
 
     const goal = new Goal({
         goalName: req.body.goalName,

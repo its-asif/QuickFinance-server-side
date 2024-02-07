@@ -114,9 +114,25 @@ const budgetSchema = new mongoose.Schema({
 
 
   // summary
-  totalIncome: { type: Number },
-  totalExpense: { type: Number },
-  totalSaving: { type: Number },
+  totalIncome: { 
+    type: Number,
+    default: function() {
+      return this.homePay + this.partnerPay + this.bonusPay + this.investmentsPay + this.familyPay + this.otherPay;
+    }
+  },
+  totalExpense: { 
+    type: Number,
+    default: function() {
+      return this.carInsurance + this.homeContentsInsurance + this.personalLifeInsurance + this.healthInsurance + this.carLoan + this.creditCardInterest + this.otherLoans + this.payingOffDebt + this.charityDonations + this.otherInsuranceFinancial + this.mortgageRent + this.bodyCorporateFees + this.councilRates + this.furnitureAppliances + this.electricity + this.gas + this.water + this.internet + this.payTV + this.homePhone + this.mobile + this.otherHomeUtilities + this.totalGroceries + this.cosmeticsToiletries + this.hairBeauty + this.medicinesPharmacy + this.glassesEyeCare + this.dental + this.doctorsMedical + this.hobbies + this.clothingShoes + this.jewelleryAccessories + this.computersGadgets + this.sportsGym + this.education + this.petCareVet + this.otherPersonalMedical + this.coffeeTea + this.lunchesBought + this.takeAwaySnacks + this.drinksAlcohol + this.barsClubs + this.restaurants + this.books + this.newspaperMagazines + this.moviesMusic + this.holidays + this.celebrationsGifts + this.otherEntertainment + this.busTrainFerry + this.petrol + this.roadTollsParking + this.repairsMaintenance + this.fines + this.airfares + this.otherTransportAuto + this.babyProducts + this.toys + this.babysitting + this.childcare + this.sportsActivities + this.schoolFees + this.excursions + this.schoolUniforms + this.otherSchoolNeeds + this.otherChildren;
+    }
+  },
+  totalSaving: { 
+    type: Number, 
+    default: function() {
+      return this.totalIncome - this.totalExpense;
+    }
+  },
+
 });
 
 module.exports = mongoose.model("Budget", budgetSchema);
