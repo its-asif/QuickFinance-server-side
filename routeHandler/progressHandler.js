@@ -4,7 +4,7 @@ const Budget = require("../schema/budgetSchema");
 const Goal = require('../schema/goalSchema')
 
 
-// get totalIncome, totalExpense, totalSaving from budget by email
+// get progress data by user's email
 router.get('/budget/:email', async(req, res) => {
     const email = req.params.email;
 
@@ -28,8 +28,6 @@ router.get('/budget/:email', async(req, res) => {
     }
 })
 
-
-// get all from Goal by email
 
 
 
