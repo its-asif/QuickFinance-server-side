@@ -33,17 +33,31 @@ router.post("/", async (req, res) => {
   const budgetData = req.body;
 
   try {
-    const result = await Budget.findOneAndUpdate(
-      { userEmail: userEmail },
-      { $set: budgetData },
-      { upsert: true, new: true }
-    );
+    // find and check if exists, 
 
-    res.json(result);
+    const result = await Budget.find ({ userEmail });
+    console.log(result);
+
+    if(!result.length) {
+      const budget = new Budget(budgetData);
+      const newBudget = await budget.save();
+      res.json(newBudget);
+    }
+    else {
+      const updatedBudget = await Budget.updateOne({
+        userEmail
+      }, {
+        $set: budgetData
+      });
+
+      res.json(updatedBudget);
+    }
+
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.log(err);
+    res.status(500).send({ message: err });
   }
-});
+}); 
 
 
 router.delete("/:userEmail", async (req, res) => {
