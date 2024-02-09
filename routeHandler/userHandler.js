@@ -44,4 +44,45 @@ router.post('/', async (req, res) => {
 })
 
 
+// update a user
+router.patch('/:email', async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.params.email })
+        if (req.body.name) {
+            user.name = req.body.name
+        }
+        if (req.body.email) {
+            user.email = req.body.email
+        }
+        if (req.body.photoUrl) {
+            user.photoUrl = req.body.photoUrl
+        }
+        if (req.body.profession) {
+            user.profession = req.body.profession
+        }
+        if (req.body.subcriptionPlan) {
+            user.subcriptionPlan = req.body.subcriptionPlan
+        }
+        const updatedUser = await user.save()
+        res.json(updatedUser)
+    } catch(err) {
+        res.status(500).json({ message: err.message })
+    }
+})
+
+
+// delete a user
+router.delete('/:email', async (req, res) => {
+    try {
+        // const user = await User.findOne({ email: req.params.email })
+        // const deletedUser = await user.remove()
+        const deletedUser = await User.findOneAndDelete({ email: req.params.email })
+        res.json(deletedUser)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({ message: err.message })
+    }
+})
+
+
 module.exports = router;
