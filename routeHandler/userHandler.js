@@ -12,6 +12,16 @@ router.get('/', async (req, res) => {
     }
 }) 
 
+// get a user
+router.get('/:email', async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.params.email })
+        res.json(user)
+    } catch(err) {
+        res.send('Error ' + err)
+    }
+})
+
 // post a user
 router.post('/', async (req, res) => {
     // const user = new User({

@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
         type: String, 
         enum: ['personal', 'family', 'business']
     },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    }
 })
 
 
