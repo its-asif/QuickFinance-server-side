@@ -6,7 +6,7 @@ const cors = require('cors');
 // express app initialization
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); 
 
 
 // database connection with mongoose
@@ -24,7 +24,18 @@ app.use('/api/users', require('./routeHandler/userHandler'));
 app.use('/api/transactions', require('./routeHandler/transactionHandler'))
 app.use('/api/dashboard', require('./routeHandler/dashboardHandler'))
 app.use('/api/budget', require('./routeHandler/budgetHandler'))
+app.use('/api/goals', require('./routeHandler/goalHandler'))
+app.use('/api/progress', require('./routeHandler/progressHandler'))
 
+
+// default error handler
+function errorHandler(err, req, res, next) {
+    
+    if( res.headersSent ) {
+        return next(err);
+    }
+    res.status(500).json({ error: err });
+}
 
 app.listen(3000, () => {
     console.log('Server started on port 3000');
