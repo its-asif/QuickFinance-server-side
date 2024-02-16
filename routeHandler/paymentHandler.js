@@ -7,7 +7,7 @@ const Payment = require('../schema/paymentSchema')
 
 const store_id = `${process.env.STORE_ID}`
 const store_passwd = `${process.env.STORE_PASS}`
-const is_live = false //true for live, false for sandbox
+const is_live = true //true for live, false for sandbox
 
 router.post('/',async(req,res)=>{
     console.log(req.body);
