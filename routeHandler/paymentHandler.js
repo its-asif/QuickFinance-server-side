@@ -6,7 +6,7 @@ const Payment = require('../schema/paymentSchema');
 
 const store_id = `${process.env.STORE_ID}`;
 const store_passwd = `${process.env.STORE_PASS}`;
-const is_live = false; // true for live, false for sandbox
+const is_live = true; // true for live, false for sandbox
 
 router.get('/', async (req, res) => {
     try {
@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
             total_amount: pay.amount,
             currency: pay.currency_type,
             tran_id: transId, // use unique tran_id for each api call
-            success_url: `http://localhost:5173/payment/success/${transId}`,
+            success_url: `https://quickfinance-a948a.web.app/payment/success/${transId}`,
             fail_url: 'http://localhost:3030/payment/fail',
             cancel_url: 'http://localhost:3030/cancel',
             ipn_url: 'http://localhost:3030/ipn',
@@ -87,9 +87,7 @@ router.post('/', async (req, res) => {
             post_code: pay.post_code,
             phone_no: pay.phone_no,
             email: pay.email,
-            payment_status: 'false',
-            tran_id: transId,
-            payment_status: 'false',
+            payment_status: 'true',
             tran_id: transId,
         };
 
@@ -111,9 +109,9 @@ router.post('/payment/success/:tranId', async (req, res) => {
         const { tranId } = req.params;
         console.log(tranId);
         const result = await Payment.updateOne({ tran_id: tranId }, { $set: { payment_status: 'true' } });
-        if (result.modifiedCount > 0) {
-            res.redirect(`http://localhost:5173/payment/success/${tranId}`);
-        }
+        // if (result.modifiedCount > 0) {
+        //     res.redirect(`https://quickfinance-a948a.web.app/payment/success/${tranId}`);
+        // }
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Internal Server Error');
@@ -124,9 +122,9 @@ router.post('/payment/fail/:transId', async (req, res) => {
     try {
         const { transId } = req.params;
         const result = await Payment.deleteOne({ tran_id: transId });
-        if (result.deletedCount) {
-            res.redirect(`http://localhost:5173/payment/fail/${transId}`);
-        }
+        // if (result.deletedCount) {
+        //     res.redirect(`https://quickfinance-a948a.web.app/payment/fail/${transId}`);
+        // }
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Internal Server Error');
