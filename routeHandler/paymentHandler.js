@@ -8,6 +8,29 @@ const store_id = `${process.env.STORE_ID}`;
 const store_passwd = `${process.env.STORE_PASS}`;
 const is_live = false; // true for live, false for sandbox
 
+router.get('/', async (req, res) => {
+    try {
+        const payments = await Payment.find();
+        res.json(payments);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// get by email
+router.get('/:email', async (req, res) => {
+    const email = req.params.email;
+    try {
+        const payments = await Payment.find({ email });
+        res.json(payments);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 router.post('/', async (req, res) => {
     let data; // Define data variable outside the try block
     try {
@@ -58,7 +81,7 @@ router.post('/', async (req, res) => {
             amount: pay.amount,
             currency_type: pay.currency_type,
             organizer_name: pay.organizer_name,
-            trxType: 'Payment',
+            trxType: pay.trxType,
             name: pay.name,
             address: pay.address,
             post_code: pay.post_code,
