@@ -23,19 +23,60 @@ router.get('/:userEmail', async(req,res) =>{
     }
 })
 
+// get blogs by id
+router.get('/blog/:id', async(req,res) =>{
+    try{
+        const blog = await Blog.findById(req.params.id);
+        res.json(blog);
+    } catch(err){
+        res.status(500).json({message: err.message})
+    }
+})
+
 // post a blog
 router.post('/', async(req,res)=>{
     try{
-        const newBlog = new Blog({
-            title: req.body.title,
-            content: req.body.content,
+        const blog = new Blog({
             userEmail: req.body.userEmail,
             userName: req.body.userName,
-            userImage: req.body.userImage
+            userImg: req.body.userImg,
+            title: req.body.title,
+            tags: req.body.tags,
+            blogImg: req.body.blogImage,
+            content: req.body.content
         })
+        console.log(blog)
+        const newBlog = await blog.save();
+        console.log(newBlog);
 
-        const blog = await newBlog.save()
-        res.json(blog)
+        res.status(200).json(newBlog);
+    
+    } catch(err){
+        res.status(500).json({
+            status: "failed",
+            message: err.message})
+    }
+})
+
+// update a blog
+router.patch('/:id', async(req,res)=>{
+    try{
+        const blog = await Blog.findById(req.params.id);
+        blog.title = req.body.title;
+        blog.tags = req.body.tags;
+        blog.content = req.body.content;
+        const updatedBlog = await blog.save();
+        res.json(updatedBlog);
+    } catch(err){
+        res.status(500).json({message: err.message})
+    }
+})
+
+// delete a blog
+router.delete('/:id', async(req,res)=>{
+    try{
+        const blog = await Blog.findOneAndDelete(req.params.id);
+        res.status(200).send('Blog deleted successfully')
     } catch(err){
         res.status(500).json({message: err.message})
     }
