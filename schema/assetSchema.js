@@ -24,6 +24,14 @@ const assetSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    status: {
+        type: String,
+        required: true
+    },
+    purchase_date: {
+        type: String,
+        required: true
+    },
     magnitude: {
         type: Number,
         required: true
