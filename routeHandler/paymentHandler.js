@@ -7,7 +7,7 @@ const Payment = require('../schema/paymentSchema')
 
 const store_id = `${process.env.STORE_ID}`
 const store_passwd = `${process.env.STORE_PASS}`
-const is_live = true //true for live, false for sandbox
+const is_live = false //true for live, false for sandbox
 
 router.post('/',async(req,res)=>{
     console.log(req.body);
@@ -55,17 +55,22 @@ router.post('/',async(req,res)=>{
 
 
         const finalData = {
-            pay,payment_status:'false',  tran_id:transId,
+            payment_status:'false', 
+             tran_id:transId,
+             email:pay.email, 
+             trxType:pay.trxType,
+             amount:pay.amount,
+             organizer_name:pay.organizer_name,
+             currency_type:pay.currency_type,
+            name:pay.name,
+            address:pay.address,
+            post_code:pay.post_code,
+            phone_no:pay.phone_no,
+
+
         }
         const newPayment = new Payment(finalData);
-       const result =  newPayment.save()
-    .then(result => {
-        res.send(result); 
-    })
-    .catch(error => {
-        res.status(500).send(error); 
-    });
-        res.send(result)
+        const result =  newPayment.save()
         console.log('Redirecting to: ', GatewayPageURL)
     });
 
@@ -79,17 +84,42 @@ router.post('/',async(req,res)=>{
         if(result.modifiedCount > 0){
             res.redirect(`https://quickfinance-a948a.web.app/payment/success/${req.params.tranId}`)
         }
-
+    
     })
+    router.post("/payment/fail/:transId", async(req,res)=>{
+        const result = await Payment.deleteOne({tran_id:req.params.tranId})
+        if(result.deletedCount){
+            res.redirect(`https://quickfinance-a948a.web.app/payment/fail/${req.params.tranId}`)
+        }
+    })
+
 })
-app.post("/payment/fail/:transId", async(req,res)=>{
-    const result = await Payment.deleteOne({tran_id:req.params.tranId})
-    if(result.deletedCount){
-        res.redirect(`https://quickfinance-a948a.web.app/payment/fail/${req.params.tranId}`)
+
+router.get('/', async(req,res)=>{
+    try {
+        const payments = await Payment.find();
+        
+        res.send(payments);
+      } catch (err) {
+        res.send("Error " + err);
+      }
+})
+
+router.get("/:email", async (req, res) => {
+    const email = req.params.email;
+  
+    try {
+      const payments = await Payment.find({ email });
+  
+      res.send(payments);
+    } catch (err) {
+      res.status(500).send({ message: err.message });
     }
-})
+  });
 
 
-// updated  code for the server side
+
+
+
 
 module.exports = router;
