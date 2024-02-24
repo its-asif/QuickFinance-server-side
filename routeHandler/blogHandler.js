@@ -33,6 +33,37 @@ router.get('/blog/:id', async(req,res) =>{
     }
 })
 
+// handle like
+router.patch('/like/:id', async(req,res) =>{
+    console.log(req.body);
+    try{
+        const blog = await Blog.findById(req.params.id);
+        if( blog.likedBy.indexOf(req.body.userEmail) > -1){
+            blog.likes -= 1;
+            blog.likedBy = blog.likedBy.filter(email => email !== req.body.userEmail); 
+        } else {
+            blog.likes += 1;
+            blog.likedBy.push(req.body.userEmail);
+        }
+        
+        const updatedBlog = await blog.save();
+        res.json(updatedBlog);
+    } catch(err){
+        res.status(500).json({message: err.message})
+    }
+})
+
+
+// get blogs by tag
+router.get('/tag/:tag', async(req,res) =>{
+    try{
+        const blogs = await Blog.find({tags: req.params.tag});
+        res.json(blogs);
+    } catch(err){
+        res.status(500).json({message: err.message})
+    }
+})
+
 // post a blog
 router.post('/', async(req,res)=>{
     try{
