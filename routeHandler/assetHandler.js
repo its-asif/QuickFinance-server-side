@@ -4,108 +4,89 @@ const Asset = require('../schema/assetSchema')
 
 router.get('/', async (req, res) => {
     try {
-        const goals = await Goal.find()
-        res.json(goals)
-    } catch(err) {
+        const asset = await Asset.find()
+        res.json(asset)
+    } catch (err) {
         res.send('Error ' + err)
     }
 })
 
-// get goals by user's email
+// get asset by user's email
 router.get('/:userEmail', async (req, res) => {
     const userEmail = req.params.userEmail
 
     try {
-        const goals = await Asset.find({ userEmail })
+        const asset = await Asset.find({ userEmail })
 
-        if (!goals || goals.length === 0) {
-            return res.status(404).json({ message: `No goals found for user with email ${userEmail}` })
+        if (!asset || asset.length === 0) {
+            return res.status(404).json({ message: `No asset found for user with email ${userEmail}` })
         } else {
-            res.json(goals)
+            res.json(asset)
         }
-    } catch(err) {
+    } catch (err) {
         res.status(500).json({ message: err.message })
     }
 });
 
-// post a goal
+// post a asset
 router.post('/', async (req, res) => {
-
-    const goal = new Asset({
-        goalName: req.body.goalName,
+    console.log(req.body);
+    const asset = new Asset({
         userEmail: req.body.userEmail,
-        goalAmount: req.body.goalAmount,
-        goalDate: req.body.goalDate,
-        amountSaved: req.body.amountSaved,
-        amountNeeded: req.body.goalAmount - req.body.amountSaved,
-        remainingDays: Math.floor((new Date(req.body.goalDate) - new Date()) / (1000 * 60 * 60 * 24)),
-        goalStatus: req.body.goalAmount > req.body.amountSaved ? "pending" : "completed"
+        category: req.body.category,
+        asset_name: req.body.asset_name,
+        magnitude: req.body.magnitude,
+        purchase_date: req.body.purchase_date,
+        locale: req.body.locale,
+        value: req.body.value,
+        status: req.body.status,
     })
 
-    console.log(goal)
+    console.log(asset)
 
     try {
-        const newGoal =  await goal.save() 
-        res.json(newGoal)
-    } catch(err) {
+        const newAsset = await asset.save()
+        res.json(newAsset)
+    } catch (err) {
         res.status(500).json({ message: err.message })
     }
 })
 
-// update a goal
+// update a asset
 router.patch('/:id', async (req, res) => {
     const id = req.params.id
-    const goalData = req.body
+    const assetData = req.body
 
     try {
-        const result = await Asset.findByIdAndUpdate(id, { $set: goalData }, { new: true }) 
+        const result = await Asset.findByIdAndUpdate(id, { $set: assetData }, { new: true })
         res.json(result)
-    } catch(err) {
+    } catch (err) {
         res.status(500).json({ message: err.message })
     }
 })
 
-// add amount to amountSaved
-router.patch('/addAmount/:id', async (req, res) => {
-    const id = req.params.id
-    const amount = req.body.amount
-
-    try {
-        const goal = await Asset.findById(id)
-        const goalAmount = goal.goalAmount
-        const amountSaved = goal.amountSaved
-        const newAmountSaved = amountSaved + amount
-        const amountNeeded = goalAmount - newAmountSaved
-        const goalStatus = goalAmount > newAmountSaved ? "pending" : "completed"
-        const result = await Goal.findByIdAndUpdate(id, 
-                                                    { $set: { amountSaved: newAmountSaved, amountNeeded, goalStatus } }, 
-                                                    { new: true })
-
-        res.json(result)
-    } catch(err) {
-        res.status(500).json({ message: err.message })
-    }
-} )
-
-// delete a goal
+// delete a asset
 router.delete('/:id', async (req, res) => {
     const id = req.params.id
 
     try {
-        const result = await Goal.findByIdAndDelete(id)
+        const result = await Asset.findByIdAndDelete(id)
         res.json(result)
-    } catch(err) {
+    } catch (err) {
         res.status(500).json({ message: err.message })
     }
 })
 
 // dummy goal data for postman testing
 // {
-//     "goalName": "Macbook Pro",
-//     "userEmail": "xxxx@xxxxx",
-//     "goalAmount": 2000,
-//     "goalDate": "2021-12-31",
-//     "amountSaved": 0
+//     "userEmail": "xxxx@xxxxx"
+//     "category": "Real Estate",
+//     "asset_name": "Property A",
+//     "magnitude": "5000",
+//     "purchase_date": "2024-02-15",
+//     "locale": "New York",
+//     "value": 180000,
+//     "status": "down"
 // }
 
 

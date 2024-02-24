@@ -1,13 +1,6 @@
 const mongoose = require('mongoose');
 
 const assetSchema = new mongoose.Schema({
-    // {
-    //     "category": "Land",
-    //     "asset": "Real Estate",
-    //     "magnitude": "5000 sqft",
-    //     "locale": "New York",
-    //     "value": "180000"
-    // },
     userEmail: {
         type: String,
         required: true
@@ -16,19 +9,7 @@ const assetSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    asset: {
-        type: String,
-        required: true
-    },
-    locale: {
-        type: String,
-        required: true
-    },
-    status: {
-        type: String,
-        required: true
-    },
-    purchase_date: {
+    asset_name: {
         type: String,
         required: true
     },
@@ -36,10 +17,32 @@ const assetSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    purchase_date: {
+        type: String,
+        required: true
+    },
+    locale: {
+        type: String,
+        required: true
+    },
     value: {
         type: Number,
+        required: true
+    },
+    status: {
+        type: String,
+        required: true
     }
 
 }, { timestamps: true });
+
+// Virtual property to calculate netAsset
+// assetSchema.virtual('netAsset').get(function () {
+//     let totalValue = 0;
+//     this.asset.forEach((item) => {
+//         totalValue += item.value;
+//     });
+//     return totalValue;
+// });
 
 module.exports = mongoose.model('Asset', assetSchema);
