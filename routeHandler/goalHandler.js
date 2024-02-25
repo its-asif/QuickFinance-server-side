@@ -6,7 +6,7 @@ router.get('/', async (req, res) => {
     try {
         const goals = await Goal.find()
         res.json(goals)
-    } catch(err) {
+    } catch (err) {
         res.send('Error ' + err)
     }
 })
@@ -23,7 +23,7 @@ router.get('/:userEmail', async (req, res) => {
         } else {
             res.json(goals)
         }
-    } catch(err) {
+    } catch (err) {
         res.status(500).json({ message: err.message })
     }
 });
@@ -45,9 +45,9 @@ router.post('/', async (req, res) => {
     console.log(goal)
 
     try {
-        const newGoal =  await goal.save() 
+        const newGoal = await goal.save()
         res.json(newGoal)
-    } catch(err) {
+    } catch (err) {
         res.status(500).json({ message: err.message })
     }
 })
@@ -58,9 +58,9 @@ router.patch('/:id', async (req, res) => {
     const goalData = req.body
 
     try {
-        const result = await Goal.findByIdAndUpdate(id, { $set: goalData }, { new: true }) 
+        const result = await Goal.findByIdAndUpdate(id, { $set: goalData }, { new: true })
         res.json(result)
-    } catch(err) {
+    } catch (err) {
         res.status(500).json({ message: err.message })
     }
 })
@@ -77,15 +77,15 @@ router.patch('/addAmount/:id', async (req, res) => {
         const newAmountSaved = amountSaved + amount
         const amountNeeded = goalAmount - newAmountSaved
         const goalStatus = goalAmount > newAmountSaved ? "pending" : "completed"
-        const result = await Goal.findByIdAndUpdate(id, 
-                                                    { $set: { amountSaved: newAmountSaved, amountNeeded, goalStatus } }, 
-                                                    { new: true })
+        const result = await Goal.findByIdAndUpdate(id,
+            { $set: { amountSaved: newAmountSaved, amountNeeded, goalStatus } },
+            { new: true })
 
         res.json(result)
-    } catch(err) {
+    } catch (err) {
         res.status(500).json({ message: err.message })
     }
-} )
+})
 
 // delete a goal
 router.delete('/:id', async (req, res) => {
@@ -94,7 +94,7 @@ router.delete('/:id', async (req, res) => {
     try {
         const result = await Goal.findByIdAndDelete(id)
         res.json(result)
-    } catch(err) {
+    } catch (err) {
         res.status(500).json({ message: err.message })
     }
 })
