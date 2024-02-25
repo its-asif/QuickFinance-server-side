@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
         status: req.body.status,
     })
 
-    console.log(asset)
+
 
     try {
         const newAsset = await asset.save()
@@ -59,6 +59,7 @@ router.patch('/:id', async (req, res) => {
 
     try {
         const result = await Asset.findByIdAndUpdate(id, { $set: assetData }, { new: true })
+        console.log(result);
         res.json(result)
     } catch (err) {
         res.status(500).json({ message: err.message })

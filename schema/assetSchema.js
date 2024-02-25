@@ -13,6 +13,12 @@ const assetSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    karat: {
+        type: String,
+    },
+    interestRate: {
+        type: String,
+    },
     magnitude: {
         type: Number,
         required: true
