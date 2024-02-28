@@ -19,7 +19,7 @@ router.post('/',async(req,res)=>{
         currency: pay.currency_type,
         tran_id: transId, // use unique tran_id for each api call
         success_url: `https://quick-finance-server-side.vercel.app/api/payment/success/${transId}`,
-        fail_url: 'https://quick-finance-server-side.vercel.app/api/payment/fail',
+        fail_url: `https://quick-finance-server-side.vercel.app/api/payment/fail/${transId}`,
         cancel_url: 'http://localhost:3030/cancel',
         ipn_url: 'http://localhost:3030/ipn',
         shipping_method: 'Courier',
