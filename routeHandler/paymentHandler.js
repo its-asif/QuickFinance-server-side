@@ -18,8 +18,8 @@ router.post('/',async(req,res)=>{
         total_amount: pay.amount,
         currency: pay.currency_type,
         tran_id: transId, // use unique tran_id for each api call
-        success_url: `https://quickfinance-a948a.web.app/payment/success/${transId}`,
-        fail_url: 'https://quickfinance-a948a.web.app/payment/fail',
+        success_url: `https://quick-finance-server-side.vercel.app/api/payment/success/${transId}`,
+        fail_url: `https://quick-finance-server-side.vercel.app/api/payment/fail/${transId}`,
         cancel_url: 'http://localhost:3030/cancel',
         ipn_url: 'http://localhost:3030/ipn',
         shipping_method: 'Courier',
@@ -74,24 +74,60 @@ router.post('/',async(req,res)=>{
         console.log('Redirecting to: ', GatewayPageURL)
     });
 
-    router.post('/payment/success/:tranId', async(req,res)=>{
-        console.log(req.params.tranId);
-        const result =await  Payment.updateOne({tran_id:req.params.tranId}, {
-            $set:{
-                payment_status:'true'
-            }
-        })
-        if(result.modifiedCount > 0){
-            res.redirect(`https://quickfinance-a948a.web.app/payment/success/${req.params.tranId}`)
-        }
+    // router.post('/payment/success/:tranId', async(req,res)=>{
+    //     console.log(req.params.tranId);
+    //     const result =await  Payment.updateOne({tran_id:req.params.tranId}, {
+    //         $set:{
+    //             payment_status:'true'
+    //         }
+    //     })
+    //     if(result.modifiedCount > 0){
+    //         res.redirect(`https://quickfinance-a948a.web.app/payment/success/${req.params.tranId}`)
+    //     }
     
-    })
-    router.post("/payment/fail/:transId", async(req,res)=>{
-        const result = await Payment.deleteOne({tran_id:req.params.tranId})
-        if(result.deletedCount){
-            res.redirect(`https://quickfinance-a948a.web.app/payment/fail/${req.params.tranId}`)
+    // })
+    // router.post("/payment/fail/:transId", async(req,res)=>{
+    //     const result = await Payment.deleteOne({tran_id:req.params.tranId})
+    //     if(result.deletedCount){
+    //         res.redirect(`https://quickfinance-a948a.web.app/payment/fail/${req.params.tranId}`)
+    //     }
+    // })
+
+
+
+    //new 
+
+    router.post('/payment/success/:tranId', async (req, res) => {
+        console.log(req.params.tranId);
+        try {
+            const result = await Payment.updateOne({ tran_id: req.params.tranId }, {
+                $set: {
+                    payment_status: 'true'
+                }
+            });
+            if (result.modifiedCount > 0) {
+                res.redirect(`https://quickfinance-a948a.web.app/payment/success/${req.params.tranId}`);
+            } else {
+                res.status(404).send({ error: 'Transaction not found' });
+            }
+        } catch (err) {
+            res.status(500).send({ error: 'Failed to update payment status', message: err.message });
         }
-    })
+    });
+    
+    router.post("/payment/fail/:transId", async (req, res) => {
+        try {
+            const result = await Payment.deleteOne({ tran_id: req.params.transId });
+            if (result.deletedCount > 0) {
+                res.redirect(`https://quickfinance-a948a.web.app/payment/fail/${req.params.transId}`);
+            } else {
+                res.status(404).send({ error: 'Transaction not found' });
+            }
+        } catch (err) {
+            res.status(500).send({ error: 'Failed to delete payment', message: err.message });
+        }
+    });
+    //end
 
 })
 
