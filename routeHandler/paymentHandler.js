@@ -52,9 +52,9 @@ router.post('/', async (req, res) => {
         let GatewayPageURL = apiResponse.GatewayPageURL;
     
         // Wait for a few seconds before sending the URL
-        setTimeout(() => {
-            res.send({ url: GatewayPageURL });
-        }, 5000); 
+        
+            res.send({ url:GatewayPageURL });
+       
         const finalData = {
             payment_status:false,
             tran_id: transId,
