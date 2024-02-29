@@ -39,13 +39,13 @@ const paymentSchema = new mongoose.Schema({
         require:true
 
     },
-    tran_id : {
+    tran_id: {
         type: String,
         unique : true ,
     },
     
    payment_status:{
-    type:String
+    type:Boolean
    },
 }, {timestamps: true})
 

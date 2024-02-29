@@ -27,6 +27,9 @@ app.use('/api/budget', require('./routeHandler/budgetHandler'))
 app.use('/api/goals', require('./routeHandler/goalHandler'))
 app.use('/api/progress', require('./routeHandler/progressHandler'))
 app.use('/api/payments', require('./routeHandler/paymentHandler.js'))
+app.use('/api/blogs', require('./routeHandler/blogHandler.js'))
+// for asset 
+app.use('/api/assets', require('./routeHandler/assetHandler.js'))
 
 
 // default error handler
