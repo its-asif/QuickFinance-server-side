@@ -19,8 +19,8 @@ router.post('/', async (req, res) => {
         tran_id: transId, // use unique tran_id for each api call
         success_url: `https://quick-finance-server-side.vercel.app/api/payments/payment/success/${transId}`,
         fail_url: `https://quick-finance-server-side.vercel.app/api/payments/payment/fail/${transId}`,
-        cancel_url: 'http://localhost:3030/cancel',
-        ipn_url: 'http://localhost:3030/ipn',
+        cancel_url: 'https://quick-finance-server-side.vercel.app/cancel',
+        ipn_url: 'https://quick-finance-server-side.vercel.app/ipn',
         shipping_method: 'Bank',
         product_name: pay.organizer_name,
         product_category: pay.trxType,
@@ -50,8 +50,11 @@ router.post('/', async (req, res) => {
     sslcz.init(data).then(apiResponse => {
         // Redirect the user to payment gateway
         let GatewayPageURL = apiResponse.GatewayPageURL;
-        res.send({ url: GatewayPageURL });
-
+    
+        // Wait for a few seconds before sending the URL
+        setTimeout(() => {
+            res.send({ url: GatewayPageURL });
+        }, 5000); 
         const finalData = {
             payment_status:false,
             tran_id: transId,
