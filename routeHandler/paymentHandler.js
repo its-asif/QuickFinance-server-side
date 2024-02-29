@@ -122,7 +122,7 @@ router.delete('/', async (req, res) => {
         const payments = await Payment.deleteMany()
         res.send(payments);
     } catch (err) {
-        res.send("Error " + err);
+        res.send("Error from payment handler " + err);
     }
 });
 router.get("/:email", async (req, res) => {
