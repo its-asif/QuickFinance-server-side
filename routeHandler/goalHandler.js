@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const Goal = require('../schema/goalSchema')
-
 router.get('/', async (req, res) => {
     try {
         const goals = await Goal.find()
