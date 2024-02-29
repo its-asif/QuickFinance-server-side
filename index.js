@@ -5,8 +5,13 @@ const cors = require('cors');
 
 // express app initialization
 const app = express();
-app.use(cors());
 app.use(express.json()); 
+app.use(cors({
+    origin:['http://localhost:5173', 'https://quickfinance-a948a.web.app', 'https://quickfinance-a948a.firebaseapp.com','https://quick-finance.netlify.app'],
+    
+    
+    credentials:true
+}))
 
 
 // database connection with mongoose
