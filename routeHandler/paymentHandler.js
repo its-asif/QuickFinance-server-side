@@ -72,31 +72,40 @@ router.post('/', async (req, res) => {
         const result = newPayment.save();
         
         console.log('Redirecting to: ', GatewayPageURL);
+
+
+
+        router.post('/payment/success/:tranId', async (req, res) => {
+            console.log(req.params.tranId);
+            const result = await Payment.updateOne({ tran_id: req.params.tranId }, {
+                $set: {
+                    payment_status:true
+                }
+            });
+            
+            if (result.modifiedCount > 0) {
+                res.redirect(`https://quickfinance-a948a.web.app/payment/success/${req.params.tranId}`);
+               
+            }
+        });
+        
+        router.post("/payment/fail/:tranId", async (req, res) => {
+            const result = await Payment.deleteOne({ tran_id: req.params.tranId });
+            
+            if (result.deletedCount) {
+                res.redirect(`https://quickfinance-a948a.web.app/payment/fail/${req.params.transId}`);
+               
+            }
+        
+            
+        });
     });
+
+
+ 
+
 });
 
-router.post('/payment/success/:tranId', async (req, res) => {
-    console.log(req.params.tranId);
-    const result = await Payment.updateOne({ tran_id: req.params.tranId }, {
-        $set: {
-            payment_status:true
-        }
-    });
-    
-    if (result.modifiedCount > 0) {
-        res.redirect(`https://quickfinance-a948a.web.app/payment/success/${req.params.tranId}`);
-       
-    }
-});
-
-router.post("/payment/fail/:tranId", async (req, res) => {
-    const result = await Payment.deleteOne({ tran_id: req.params.tranId });
-    
-    if (result.deletedCount) {
-        res.redirect(`https://quickfinance-a948a.web.app/payment/fail/${req.params.transId}`);
-       
-    }
-});
 
 router.get('/', async (req, res) => {
     try {
