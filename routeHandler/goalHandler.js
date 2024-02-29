@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const Goal = require('../schema/goalSchema')
-
 router.get('/', async (req, res) => {
     try {
         const goals = await Goal.find()
@@ -30,7 +29,7 @@ router.get('/:userEmail', async (req, res) => {
 
 // post a goal
 router.post('/', async (req, res) => {
-
+    
     const goal = new Goal({
         goalName: req.body.goalName,
         userEmail: req.body.userEmail,
@@ -71,17 +70,48 @@ router.patch('/addAmount/:id', async (req, res) => {
     const amount = req.body.amount
 
     try {
-        const goal = await Goal.findById(id)
-        const goalAmount = goal.goalAmount
-        const amountSaved = goal.amountSaved
-        const newAmountSaved = amountSaved + amount
-        const amountNeeded = goalAmount - newAmountSaved
-        const goalStatus = goalAmount > newAmountSaved ? "pending" : "completed"
-        const result = await Goal.findByIdAndUpdate(id,
-            { $set: { amountSaved: newAmountSaved, amountNeeded, goalStatus } },
-            { new: true })
+        const goal = await Goal.findById(id);
+        const goalAmount = goal.goalAmount;
+        let amountSaved = goal.amountSaved;
+        const newAmountSaved = amountSaved + amount;
+        
+        // Preserve the original goal date
+        const goalDate = new Date(goal.goalDate);
+        
+        // Calculate amount needed and handle negative case
+        let amountNeeded = goalAmount - newAmountSaved;
+        amountNeeded = Math.max(0, amountNeeded);
+        
+        const goalStatus = goalAmount > newAmountSaved ? "pending" : "completed";
+        
+        let remainingDays = 0;
+        
+        if (goalAmount === newAmountSaved || goalStatus === "completed") {
+            remainingDays = 0;
+        } else {
+            const daysRemaining = Math.ceil((goalDate - new Date()) / (1000 * 60 * 60 * 24));
+        
+            if (daysRemaining === 0) {
+                remainingDays = 0;
+            } else {
+                // Calculate average daily saving rate based on original goal period
+                const originalDaysRemaining = Math.ceil((goalDate - new Date()) / (1000 * 60 * 60 * 24));
+                const averageDailySavingRate = amountSaved / originalDaysRemaining;
+                
+                // Calculate remaining days based on average daily saving rate
+                remainingDays = Math.ceil(amountNeeded / averageDailySavingRate);
+            }
+        }
+        
+        const result = await Goal.findByIdAndUpdate(
+            id,
+            { $set: { amountSaved: newAmountSaved, amountNeeded, goalStatus, remainingDays } },
+            { new: true }
+        );
+        
+        res.json(result);
+        
 
-        res.json(result)
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
