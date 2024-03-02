@@ -38,6 +38,10 @@ const assetSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true
+    },
+    JewelrySymbol:{
+        type:String,
+        
     }
 
 }, { timestamps: true });
