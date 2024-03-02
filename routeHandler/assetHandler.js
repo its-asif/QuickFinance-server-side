@@ -40,6 +40,7 @@ router.post('/', async (req, res) => {
         locale: req.body.locale,
         value: req.body.value,
         status: req.body.status,
+        JewelrySymbol:req.body.JewelrySymbol,
     })
 
 
