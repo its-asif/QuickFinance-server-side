@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Goal = require('../schema/goalSchema')
-router.get('/', async (req, res) => {
+router.get('/',  async (req, res) => {
     try {
         const goals = await Goal.find()
         res.json(goals)
@@ -118,7 +118,7 @@ router.patch('/addAmount/:id', async (req, res) => {
 })
 
 // delete a goal
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',  async (req, res) => {
     const id = req.params.id
 
     try {

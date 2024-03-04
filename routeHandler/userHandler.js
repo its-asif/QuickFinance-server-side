@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../schema/userSchema')
-
+const verifyToken =require("../index")
 // get all users
-router.get('/', async (req, res) => {
+router.get('/',verifyToken, async (req, res) => {
     try {
         const users = await User.find()
         res.json(users)
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
 }) 
 
 // get a user
-router.get('/:email', async (req, res) => {
+router.get('/:email',verifyToken, async (req, res) => {
     try {
         const user = await User.findOne({ email: req.params.email })
         res.json(user)
@@ -21,7 +21,37 @@ router.get('/:email', async (req, res) => {
         res.send('Error ' + err)
     }
 })
-
+router.patch('/admin/:id',verifyToken, async(req,res)=>{
+    try{
+        const id = req.params.id;
+    
+      
+      const updatedDoc = {
+        $set:{
+          isAdmin :true
+        }
+      }
+      const result = await User.findByIdAndUpdate(id,updatedDoc);
+      res.send(result);
+      
+  
+    }
+    catch (error) {
+      res.status(500).send({ error: 'An error occurred', message: error.message });
+    }
+   });
+router.get('/admin/:email',verifyToken,  async (req, res) => {
+    const email = req.params.email;
+    
+    const query = { email: email }
+    const user = await User.findOne(query)
+    let isAdmin = false;
+    if (user) {
+        isAdmin = user?.isAdmin === true;
+    }
+    res.send({isAdmin})
+    console.log(isAdmin);
+  });
 // post a user
 router.post('/', async (req, res) => {
     // const user = new User({
@@ -45,7 +75,7 @@ router.post('/', async (req, res) => {
 
 
 // update a user
-router.patch('/:email', async (req, res) => {
+router.patch('/:email',verifyToken, async (req, res) => {
     try {
         const user = await User.findOne({ email: req.params.email })
         if (req.body.name) {
@@ -72,7 +102,7 @@ router.patch('/:email', async (req, res) => {
 
 
 // delete a user
-router.delete('/:email', async (req, res) => {
+router.delete('/admin/:email',verifyToken, async (req, res) => {
     try {
         // const user = await User.findOne({ email: req.params.email })
         // const deletedUser = await user.remove()
