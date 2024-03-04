@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Asset = require('../schema/assetSchema')
 
-router.get('/', async (req, res) => {
+router.get('/',async (req, res) => {
     try {
         const asset = await Asset.find()
         res.json(asset)
