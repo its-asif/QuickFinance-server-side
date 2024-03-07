@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Asset = require('../schema/assetSchema')
 
-router.get('/', async (req, res) => {
+router.get('/',async (req, res) => {
     try {
         const asset = await Asset.find()
         res.json(asset)
@@ -40,6 +40,7 @@ router.post('/', async (req, res) => {
         locale: req.body.locale,
         value: req.body.value,
         status: req.body.status,
+        JewelrySymbol:req.body.JewelrySymbol,
     })
 
 

@@ -24,7 +24,7 @@ router.get('/:userEmail', async(req,res) =>{
 })
 
 // get blogs by id
-router.get('/blog/:id', async(req,res) =>{
+router.get('/blog/:id',  async(req,res) =>{
     try{
         const blog = await Blog.findById(req.params.id);
         res.json(blog);
@@ -65,7 +65,7 @@ router.get('/tag/:tag', async(req,res) =>{
 })
 
 // post a blog
-router.post('/', async(req,res)=>{
+router.post('/',async(req,res)=>{
     try{
         const blog = new Blog({
             userEmail: req.body.userEmail,
